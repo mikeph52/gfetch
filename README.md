@@ -1,2 +1,7 @@
-# gfetch
-A simple and modern tool for searching and downloading genome data from NCBI Datasets.
+# gFetch
+A simple and modern tool for searching and downloading genome data from NCBI Datasets, written in Python
+
+
+
+
+## More coming soon
