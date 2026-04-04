@@ -1,12 +1,11 @@
-# gFetch v.0.0.1 by mikeph52 3/4/2026
+# gFetch v.0.2.0 by mikeph52 4/4/2026
 import subprocess
 import requests
 import json
-import sys
 
 # Functions
 def help():
-    print("gFetch v.0.0.1 by mikeph52\n")
+    print("gFetch v.0.2.0 by mikeph52\n")
     print("A better version of datasets\n\n")
 
     print("Using NCBI")
@@ -51,15 +50,19 @@ def CheckConnection():
     NetworkTestNCBI()
     print("Net diagnostics [OK]\n")
 
+def getTaxon():
+    print("Enter the taxon number: ")
+    taxon = input()
+    return taxon
+
 #ncbi
 def NCBIDownload():
     #datasets download genome taxon 6656  --reference --dehydrated --filename "$DB"/arthropoda/arthropoda.zip --no-progressbar      
     taxon = "4932"
     subprocess.run(["datasets","download","genome","taxon",taxon,"--reference"])
 
-
-def NCBIDehydrated():
-    taxon = "4932"
+def NCBIDehydrated(taxon):
+    #taxon = "4932"
     summary = subprocess.run(["datasets", "summary" ,"genome","taxon",taxon ,"--as-json-lines"],capture_output=True, text=True)
     
     sizes = []
@@ -69,7 +72,7 @@ def NCBIDehydrated():
         d = json.loads(line)
         val = d.get('assembly_stats', {}).get('total_sequence_length', 0)
         sizes.append(int(val) if val else 0)
-        
+
     sizeGB = sum(sizes)/1e9
 
     if sizeGB >= 10:
@@ -77,20 +80,13 @@ def NCBIDehydrated():
     else:
         subprocess.run(["datasets","download","genome","taxon",taxon,"--reference"])
     
-
-
-
-
-
-
-
 # main function
 def main():
+    taxon = getTaxon()
     help()
     print("THIS IS A TEST VERSION!!!\n")
     CheckConnection()
-    NCBIDehydrated()
-
+    NCBIDehydrated(taxon)
 
 if __name__ == "__main__":
     main()
