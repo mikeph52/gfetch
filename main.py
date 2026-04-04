@@ -2,9 +2,10 @@
 import subprocess
 import requests
 import json
+import sys # for aborting connection
 
 # Functions
-def help():
+def print_help():
     print("gFetch v.0.8.2 by mikeph52\n")
     print("A better version of datasets\n")
     print("Using NCBI datasets (O'Leary NA et. al, 2024)")
@@ -22,10 +23,13 @@ def NetworkTestNCBI():
             return True
         else:
             print(f"Unexpected status: {response.status_code}")
+            return False
     except requests.exceptions.ConnectionError:
         print("No connection to NCBI API")
+        return False
     except requests.exceptions.Timeout:
         print("Connection timed out")
+        return False
 def NetworkTestGlobal():
     try:
         response = requests.get("https://www.google.com", timeout=5)
@@ -44,8 +48,16 @@ def NetworkTestGlobal():
 def CheckConnection():
     print("Net diagnostics [CHECK]")
     print("-----------------------")
-    NetworkTestGlobal()
-    NetworkTestNCBI()
+    if not NetworkTestGlobal():
+        print("Internet connection [FAULT]")
+        print("Aborting — no internet.")
+        print("Net diagnostics [FAULT]")
+        sys.exit(1)
+    if not NetworkTestNCBI():
+       print("NCBI API [FAULT]")
+       print("Aborting - no connection to NCBI API")
+       print("Net diagnostics [FAULT]")
+       sys.exit(1)
     print("Net diagnostics [OK]")
     print("-----------------------\n")
 
@@ -69,25 +81,12 @@ def NCBIdownGenome():
         subprocess.run(["datasets","download","genome","taxon",taxon,"--dehydrated","--reference"])
     else:
         subprocess.run(["datasets","download","genome","taxon",taxon,"--reference"])
+
 def NCBIdownGene():
     print("Enter the taxon number: ")
     taxon = input()
-    summary = subprocess.run(["datasets", "summary" ,"gene","taxon",taxon ,"--as-json-lines"],capture_output=True, text=True)
-    
-    sizes = []
-    for line in summary.stdout.strip().split("\n"):
-        if not line:
-            continue
-        d = json.loads(line)
-        val = d.get('assembly_stats', {}).get('total_sequence_length', 0)
-        sizes.append(int(val) if val else 0)
+    subprocess.run(["datasets","download","gene","taxon",taxon])
 
-    sizeGB = sum(sizes)/1e9
-
-    if sizeGB >= 10:
-        subprocess.run(["datasets","download","gene","taxon",taxon,"--dehydrated"])
-    else:
-        subprocess.run(["datasets","download","gene","taxon",taxon])
 def NCBIdownVirus():
     print("Enter the taxon number: ")
     taxon = input()
@@ -124,7 +123,7 @@ def NCBISumVirus():
     
 # main logic
 def startup():
-    help()
+    print_help()
     print("THIS IS A TEST VERSION!!!\n")
     CheckConnection()
 
@@ -133,9 +132,9 @@ def iftreeDownloads():
     x = input()
     if x == "-genome":
         NCBIdownGenome()
-    if x == "-gene":
+    elif x == "-gene":
         NCBIdownGene()
-    if x == "-virus":
+    elif x == "-virus":
         NCBIdownVirus()
 
 def iftreeSummary():
@@ -143,10 +142,10 @@ def iftreeSummary():
     x = input()
     if x == "-genome":
         NCBISumGenome()
-    if x == "-gene":
+    elif x == "-gene":
         NCBISumGene()
-    if x == "-virus":
-        NCBIdownVirus()
+    elif x == "-virus":
+        NCBISumVirus()
 
 # main function
 def main():
@@ -155,7 +154,7 @@ def main():
     mode = input()
     if mode == "a":
         iftreeDownloads()
-    if mode == "b":
+    elif mode == "b":
         iftreeSummary()
     else:
         print("Wrong input.")
