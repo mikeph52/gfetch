@@ -1,9 +1,10 @@
 # gFetch v.0.0.1 by mikeph52 3/4/2026
-import json
 import subprocess
 import requests
+import json
+import sys
 
-
+# Functions
 def help():
     print("gFetch v.0.0.1 by mikeph52\n")
     print("A better version of datasets\n\n")
@@ -11,6 +12,7 @@ def help():
     print("Using NCBI")
     subprocess.run(["datasets","--version"])
 
+# Network Diagnostics
 def NetworkTestNCBI():
     try:
         response = requests.get(
@@ -18,7 +20,7 @@ def NetworkTestNCBI():
             timeout=5
         )
         if response.status_code == 200:
-            #print("NCBI API is reachable")
+            print("NCBI API [OK]")
             #print(f"   Version: {response.json()}")
             return True
         else:
@@ -32,7 +34,7 @@ def NetworkTestGlobal():
     try:
         response = requests.get("https://www.google.com", timeout=5)
         if response.status_code == 200:
-            #print("Internet connection is working")
+            print("Internet connection [OK]")
             return True
         else:
             print(f"Unexpected status: {response.status_code}")
@@ -45,14 +47,49 @@ def NetworkTestGlobal():
         return False
 
 def CheckConnection():
-    NetworkTestNCBI()
     NetworkTestGlobal()
-    print("All ok")
+    NetworkTestNCBI()
+    print("Net diagnostics [OK]\n")
+
+#ncbi
+def NCBIDownload():
+    #datasets download genome taxon 6656  --reference --dehydrated --filename "$DB"/arthropoda/arthropoda.zip --no-progressbar      
+    taxon = "4932"
+    subprocess.run(["datasets","download","genome","taxon",taxon,"--reference"])
 
 
+def NCBIDehydrated():
+    taxon = "4932"
+    summary = subprocess.run(["datasets", "summary" ,"genome","taxon",taxon ,"--as-json-lines"],capture_output=True, text=True)
+    
+    sizes = []
+    for line in summary.stdout.strip().split("\n"):
+        if not line:
+            continue
+        d = json.loads(line)
+        val = d.get('assembly_stats', {}).get('total_sequence_length', 0)
+        sizes.append(int(val) if val else 0)
+        
+    sizeGB = sum(sizes)/1e9
+
+    if sizeGB >= 10:
+        subprocess.run(["datasets","download","genome","taxon",taxon,"--dehydrated","--reference"])
+    else:
+        subprocess.run(["datasets","download","genome","taxon",taxon,"--reference"])
+    
+
+
+
+
+
+
+
+# main function
 def main():
-    print("test")
+    help()
+    print("THIS IS A TEST VERSION!!!\n")
     CheckConnection()
+    NCBIDehydrated()
 
 
 if __name__ == "__main__":
