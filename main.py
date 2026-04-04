@@ -7,7 +7,6 @@ import json
 def help():
     print("gFetch v.0.2.0 by mikeph52\n")
     print("A better version of datasets\n\n")
-
     print("Using NCBI")
     subprocess.run(["datasets","--version"])
 
@@ -28,7 +27,6 @@ def NetworkTestNCBI():
         print("No connection to NCBI API")
     except requests.exceptions.Timeout:
         print("Connection timed out")
-
 def NetworkTestGlobal():
     try:
         response = requests.get("https://www.google.com", timeout=5)
@@ -44,24 +42,14 @@ def NetworkTestGlobal():
     except requests.exceptions.Timeout:
         print("Connection timed out")
         return False
-
 def CheckConnection():
     NetworkTestGlobal()
     NetworkTestNCBI()
     print("Net diagnostics [OK]\n")
-
-def getTaxon():
+#ncbi
+def NCBIDehydrated():
     print("Enter the taxon number: ")
     taxon = input()
-    return taxon
-
-#ncbi
-def NCBIDownload():
-    #datasets download genome taxon 6656  --reference --dehydrated --filename "$DB"/arthropoda/arthropoda.zip --no-progressbar      
-    taxon = "4932"
-    subprocess.run(["datasets","download","genome","taxon",taxon,"--reference"])
-
-def NCBIDehydrated(taxon):
     #taxon = "4932"
     summary = subprocess.run(["datasets", "summary" ,"genome","taxon",taxon ,"--as-json-lines"],capture_output=True, text=True)
     
@@ -79,14 +67,16 @@ def NCBIDehydrated(taxon):
         subprocess.run(["datasets","download","genome","taxon",taxon,"--dehydrated","--reference"])
     else:
         subprocess.run(["datasets","download","genome","taxon",taxon,"--reference"])
-    
-# main function
-def main():
-    taxon = getTaxon()
+
+def startup():
     help()
     print("THIS IS A TEST VERSION!!!\n")
     CheckConnection()
-    NCBIDehydrated(taxon)
+
+# main function
+def main():
+    startup()
+    NCBIDehydrated()
 
 if __name__ == "__main__":
     main()
