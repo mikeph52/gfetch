@@ -1,7 +1,7 @@
 [project]
 name = "gfetch"
 version = "0.2.0"
-description = "Genome data search and download tool powered by NCBI Datasets"
+description = "A simple and modern tool for searching and downloading genome data from NCBI Datasets."
 readme = "README.md"
 requires-python = ">=3.8"
 dependencies = [
