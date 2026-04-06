@@ -1,12 +1,19 @@
-# gFetch v.0.8.2 by mikeph52 4/4/2026
+# gFetch v.0.10.2 by mikeph52 4/4/2026
 import subprocess
 import requests
 import json
-import sys # for aborting connection
+import sys # for aborting connection and argv
 
 # Functions
-def print_help():
-    print("gFetch v.0.8.2 by mikeph52\n")
+def msg():
+    print("gFetch v.0.10.2 by mikeph52\n")
+    print("A better version of datasets\n")
+    print("Using NCBI datasets (O'Leary NA et. al, 2024)")
+    print("by the National Center for Biotechnology Information\n\n")
+
+def help_me():
+    # FIX HELP ME
+    print("gFetch v.0.10.2 by mikeph52\n")
     print("A better version of datasets\n")
     print("Using NCBI datasets (O'Leary NA et. al, 2024)")
     print("by the National Center for Biotechnology Information\n\n")
@@ -62,9 +69,7 @@ def CheckConnection():
     print("-----------------------\n")
 
 # ncbi downloads
-def NCBIdownGenome():
-    print("Enter the taxon number: ")
-    taxon = input()
+def NCBIdownGenome(taxon):
     summary = subprocess.run(["datasets", "summary" ,"genome","taxon",taxon ,"--as-json-lines"],capture_output=True, text=True)
     
     sizes = []
@@ -82,14 +87,10 @@ def NCBIdownGenome():
     else:
         subprocess.run(["datasets","download","genome","taxon",taxon,"--reference"])
 
-def NCBIdownGene():
-    print("Enter the taxon number: ")
-    taxon = input()
+def NCBIdownGene(taxon):
     subprocess.run(["datasets","download","gene","taxon",taxon])
 
-def NCBIdownVirus():
-    print("Enter the taxon number: ")
-    taxon = input()
+def NCBIdownVirus(taxon):
     summary = subprocess.run(["datasets", "summary" ,"virus","genome","taxon",taxon ,"--as-json-lines"],capture_output=True, text=True)
     
     sizes = []
@@ -108,56 +109,74 @@ def NCBIdownVirus():
         subprocess.run(["datasets","download","virus","genome","taxon",taxon])
 
 # ncbi summary
-def NCBISumGenome():
-    print("Enter the taxon number: ")
-    taxon = input()
+def NCBISumGenome(taxon):
     subprocess.run(["datasets", "summary","genome","taxon",taxon])
-def NCBISumGene():
-    print("Enter the taxon number: ")
-    taxon = input()
+def NCBISumGene(taxon):
     subprocess.run(["datasets", "summary","gene","taxon",taxon])
-def NCBISumVirus():
-    print("Enter the taxon number: ")
-    taxon = input()
+def NCBISumVirus(taxon):
     subprocess.run(["datasets", "summary","virus","genome","taxon",taxon])
     
 # main logic
 def startup():
-    print_help()
-    print("THIS IS A TEST VERSION!!!\n")
+    msg()
     CheckConnection()
 
-def iftreeDownloads():
-    print("Select function: -genome , -gene, -virus")
-    x = input()
-    if x == "-genome":
-        NCBIdownGenome()
-    elif x == "-gene":
-        NCBIdownGene()
-    elif x == "-virus":
-        NCBIdownVirus()
+def handle_download():
+    if len(sys.argv) < 4:
+        print("Usage: gfetch download -genome/-gene/-virus <taxon>")
+        sys.exit(1)
 
-def iftreeSummary():
-    print("Select function: -genome , -gene, -virus")
-    x = input()
-    if x == "-genome":
-        NCBISumGenome()
-    elif x == "-gene":
-        NCBISumGene()
-    elif x == "-virus":
-        NCBISumVirus()
+    data_type = sys.argv[2]
+    taxon = sys.argv[3]
+
+    if data_type == "-genome":
+        NCBIdownGenome(taxon)
+    elif data_type == "-gene":
+        NCBIdownGene(taxon)
+    elif data_type == "-virus":
+        NCBIdownVirus(taxon)
+    else:
+        print(f"Unknown type: {data_type}")
+        sys.exit(1)
+
+def handle_summary():
+    if len(sys.argv) < 4:
+        print("Usage: gfetch summary -genome/-gene/-virus <taxon>")
+        sys.exit(1)
+
+    data_type = sys.argv[2]
+    taxon = sys.argv[3]
+
+    if data_type == "-genome":
+        NCBISumGenome(taxon)
+    elif data_type == "-gene":
+        NCBISumGene(taxon)
+    elif data_type == "-virus":
+        NCBISumVirus(taxon)
+    else:
+        print(f"Unknown type: {data_type}")
+        sys.exit(1)
 
 # main function
 def main():
-    startup()
-    print("Select mode: a)Download b)Summary")
-    mode = input()
-    if mode == "a":
-        iftreeDownloads()
-    elif mode == "b":
-        iftreeSummary()
-    else:
-        print("Wrong input.")
+    if len(sys.argv) < 2:
+        msg()
+        sys.exit(1)
 
+    command = sys.argv[1]
+
+    if command == "download":
+        startup()
+        handle_download()
+    elif command == "summary":
+        startup()
+        handle_summary()
+    elif command == "help":
+        help_me()
+    else:
+        print(f"Unknown command: {command}")
+        print("   Run 'python gfetch.py help' for usage.")
+        sys.exit(1)
+        
 if __name__ == "__main__":
     main()
