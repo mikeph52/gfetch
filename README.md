@@ -45,8 +45,8 @@ NCBI Datasets is a product of the **National Center for Biotechnology Informatio
  
 gFetch is released under the **MIT License**. You are free to use, modify, and distribute this software without restriction. See [LICENSE](LICENSE) for details.
  
-The underlying NCBI Datasets CLI and data are subject to NCBI's own usage policies:
-https://www.ncbi.nlm.nih.gov/home/about/policies/
+The underlying NCBI Datasets CLI and data are subject to NCBI's own [usage policies](https://www.ncbi.nlm.nih.gov/home/about/policies/):
+
 
 ## Changelog
 
