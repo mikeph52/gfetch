@@ -8,6 +8,9 @@
 
 gFetch is a simple and lightweight Python tool built around the [NCBI Datasets CLI](https://github.com/ncbi/datasets). It simplifies downloading and summarizing genomic, gene, and virus data from NCBI, and automatically switches to dehydrated download mode for large assemblies, with a threshold set on 10GB.
 
+> [!NOTE]
+> _If you have any suggestions for new features or a bug encountered, create an Issue or send me a message at: mikeph526@outlook.com. I'm happy to help._
+
 ## Depedencies
 ### Python
 gFetch requires python v.3.8+ and the following packages.
