@@ -11,7 +11,9 @@ console = Console()
 
 # Functions
 def msg():
-    print("gFetch v.0.11.0 by mikeph52\n")
+    print("----------------")
+    print("gFetch v.0.11.0")
+    print("by mikeph_ 2026\n")
     print("A better version of datasets\n")
     print("Using NCBI datasets (O'Leary NA et. al, 2024)")
     print("by the National Center for Biotechnology Information\n\n")
