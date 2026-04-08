@@ -90,6 +90,8 @@ The underlying NCBI Datasets CLI and data are subject to NCBI's own [usage polic
 
 ### Version 0.11.0 8/4/2026
 - Added a Terminal User Interface (TUI) in summary function using `rich`.
+- Added option for reference genomes in download mode.
+- Help funtion fixed.
 
 ### Version 0.10.2 4/4/2026
 - First pre-release version.
