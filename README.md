@@ -1,18 +1,20 @@
 # gFetch
 
-![Version](https://img.shields.io/badge/version-0.10.2-blue)
+![Version](https://img.shields.io/badge/version-0.11.0-blue)
 ![Python](https://img.shields.io/badge/python-3.8+-green)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
+
+<img width="912" height="740" alt="Image" src="https://github.com/user-attachments/assets/5c1b92ef-e5ba-4ced-9c3d-4e0c4d9e04ce" />
 
 gFetch is a simple and lightweight Python tool built around the [NCBI Datasets CLI](https://github.com/ncbi/datasets). It simplifies downloading and summarizing genomic, gene, and virus data from NCBI, and automatically switches to dehydrated download mode for large assemblies, with a threshold set on 10GB.
 
 ## Depedencies
 ### Python
-gFetch requires python v.3.8+ and the requests package.
+gFetch requires python v.3.8+ and the following packages.
 
-Install requests:
+Install packages:
 ```bash
-pip install requests
+pip install requests rich
 ```
 ### NCBI Datasets CLI
 Install datasets via conda:
@@ -32,6 +34,39 @@ To run gfetch.py:
 ```bash
 python gfetch.py
 ```
+Usage:
+```bash
+gfetch [mode] [type]-genome/-gene/-virus <taxon>
+```
+**Modes:** download/summary
+
+**Types:** -genome/-gene/-virus
+
+Currently, gfetch only supports the ncbi taxon numbers, the accesion number feature will be added in the next updates.
+
+### Download mode
+**For genomes**, when the download size surpasses the 10GB limit, the .zip file will be downloaded as a dehydrated file. The size limit was set after a lot experimentation with the ncbi datasets cli.
+
+There's also an option to download only the reference genomes from selected taxons.
+
+### Summary mode
+In the summary mode, gfetch uses a Terminal User Interface (TUI) to display features extracted from the json file datasets generates. An example is featured bellow:
+
+```bash
+             Genomic Summary
+┏━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Field        ┃ Value                   ┃
+┡━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Organism     │ Zootermopsis nevadensis │
+│ Taxon ID     │ 136037                  │
+│ Accession    │ GCF_000696155.1         │
+│ Assembly     │ ZooNev1.0               │
+│ Level        │ Scaffold                │
+│ Release Date │ 2014-07-22              │
+└──────────────┴─────────────────────────┘
+```
+
+**For genomes**, an option to display only the summaries of the reference genomes from selected taxons is available.
 
 ## Attribution
  
@@ -49,6 +84,9 @@ The underlying NCBI Datasets CLI and data are subject to NCBI's own [usage polic
 
 
 ## Changelog
+
+### Version 0.11.0 8/4/2026
+- Added a Terminal User Interface (TUI) in summary function using `rich`.
 
 ### Version 0.10.2 4/4/2026
 - First pre-release version.
