@@ -50,7 +50,7 @@ Currently, gfetch only supports the ncbi taxon numbers, the accesion number feat
 There's also an option to download only the reference genomes from selected taxons.
 
 ### Summary mode
-In the summary mode, gfetch uses a Terminal User Interface (TUI) to display features extracted from the json file datasets generates. An example is featured bellow:
+In the summary mode, gfetch uses a Terminal User Interface (TUI) to display features extracted from the json file datasets generates. An example of the organism _Zootermopsis nevadensis_ is featured bellow:
 
 ```bash
              Genomic Summary

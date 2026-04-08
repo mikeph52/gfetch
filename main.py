@@ -75,22 +75,38 @@ def CheckConnection():
 
 # ncbi downloads
 def NCBIdownGenome(taxon):
-    summary = subprocess.run(["datasets", "summary" ,"genome","taxon",taxon ,"--as-json-lines"],capture_output=True, text=True)
-    
-    sizes = []
-    for line in summary.stdout.strip().split("\n"):
-        if not line:
-            continue
-        d = json.loads(line)
-        val = d.get('assembly_stats', {}).get('total_sequence_length', 0)
-        sizes.append(int(val) if val else 0)
+    print("Do you want only reference genomes? [y/n]")
+    choice_ref = input()
+    # here we go again
+    if choice_ref == "y":
+        summary = subprocess.run(["datasets", "summary" ,"genome","taxon",taxon,"--reference","--as-json-lines"],capture_output=True, text=True)
+        sizes = []
+        for line in summary.stdout.strip().split("\n"):
+            if not line:
+                continue
+            d = json.loads(line)
+            val = d.get('assembly_stats', {}).get('total_sequence_length', 0)
+            sizes.append(int(val) if val else 0)
+        sizeGB = sum(sizes)/1e9
+        if sizeGB >= 10:
+            subprocess.run(["datasets","download","genome","taxon",taxon,"--dehydrated","--reference"])
+        else:
+            subprocess.run(["datasets","download","genome","taxon",taxon,"--reference"])
 
-    sizeGB = sum(sizes)/1e9
-
-    if sizeGB >= 10:
-        subprocess.run(["datasets","download","genome","taxon",taxon,"--dehydrated","--reference"])
-    else:
-        subprocess.run(["datasets","download","genome","taxon",taxon,"--reference"])
+    elif choice_ref == "n":
+        summary = subprocess.run(["datasets", "summary" ,"genome","taxon",taxon,"--as-json-lines"],capture_output=True, text=True)
+        sizes = []
+        for line in summary.stdout.strip().split("\n"):
+            if not line:
+                continue
+            d = json.loads(line)
+            val = d.get('assembly_stats', {}).get('total_sequence_length', 0)
+            sizes.append(int(val) if val else 0)
+        sizeGB = sum(sizes)/1e9
+        if sizeGB >= 10:
+            subprocess.run(["datasets","download","genome","taxon",taxon,"--dehydrated"])
+        else:
+            subprocess.run(["datasets","download","genome","taxon",taxon])
 
 def NCBIdownGene(taxon):
     subprocess.run(["datasets","download","gene","taxon",taxon])
