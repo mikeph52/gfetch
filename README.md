@@ -1,6 +1,6 @@
 # gFetch
 
-![Version](https://img.shields.io/badge/version-0.11.0-blue)
+![Version](https://img.shields.io/badge/version-0.12.0-blue)
 ![Python](https://img.shields.io/badge/python-3.8+-green)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
@@ -87,6 +87,9 @@ The underlying NCBI Datasets CLI and data are subject to NCBI's own [usage polic
 
 
 ## Changelog
+### Version 0.12.0 9/4/2026
+- Fix [Issue #2](https://github.com/mikeph52/gfetch/issues/2).
+- Fix summaries for genes and viruses.
 
 ### Version 0.11.0 8/4/2026
 - Added a Terminal User Interface (TUI) in summary function using `rich`.

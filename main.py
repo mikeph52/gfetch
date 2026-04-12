@@ -1,4 +1,4 @@
-# gFetch v.0.11.0 by mikeph52 4/4/2026
+# gFetch v.0.12.0 by mikeph52 9/4/2026
 import subprocess
 import requests
 import json
@@ -12,7 +12,7 @@ console = Console()
 # Functions
 def msg():
     print("----------------")
-    print("gFetch v.0.11.0")
+    print("gFetch v.0.12.0")
     print("by mikeph_ 2026\n")
     print("A better version of datasets\n")
     print("Using NCBI datasets (O'Leary NA et. al, 2024)")
@@ -132,7 +132,7 @@ def NCBIdownVirus(taxon):
         subprocess.run(["datasets","download","virus","genome","taxon",taxon])
 
 def display_genome_summary(data):
-    table = Table(title="Genomic Summary", style="cyan")
+    table = Table(title="Genome Summary", style="cyan")
     table.add_column("Field", style="bold")
     table.add_column("Value")
     table.add_row("Organism", data["organism"]["organism_name"])
@@ -143,6 +143,38 @@ def display_genome_summary(data):
     table.add_row("Release Date", data["assembly_info"]["release_date"])
     console.print(table)
 
+def display_gene_summary(data):
+    table = Table(title="Gene Summary", style="cyan")
+    table.add_column("Field", style="bold")
+    table.add_column("Value")
+    table.add_row("Organism", data.get("taxname"))
+    table.add_row("Common Name", data.get("common_name"))
+    table.add_row("Taxon ID", str(data.get("tax_id")))
+    table.add_row("Gene ID", str(data.get("gene_id")))
+    table.add_row("Symbol", data.get("symbol"))
+    table.add_row("Type", data.get("type"))
+    table.add_row("Description", data.get("description"))
+    console.print(table)
+
+def display_virus_summary(data):
+    table = Table(title="Virus Summary", style="cyan")
+    table.add_column("Field", style="bold")
+    table.add_column("Value")
+    organism = data.get("organism", {})
+    table.add_row("Organism", organism.get("organismName"))
+    table.add_row("Taxon ID", str(organism.get("taxId")))
+    table.add_row("Accession", data.get("accession"))
+    table.add_row("Length (bp)", str(data.get("length")))
+    table.add_row("Mol Type", data.get("molType"))
+    table.add_row("Annotated", str(data.get("isAnnotated")))
+    table.add_section() #divider
+    isolate = data.get("isolate", {})
+    table.add_row("Isolate", isolate.get("name"))
+    table.add_row("Collection Date", isolate.get("collectionDate"))
+    location = data.get("location", {})
+    table.add_row("Country", location.get("geographicLocation"))
+    table.add_row("Region", location.get("geographicRegion"))
+    console.print(table)
 # main logic
 def startup():
     msg()
@@ -198,16 +230,16 @@ def handle_summary():
             if not line:
                 continue
             data = json.loads(line)
-            display_genome_summary(data)
+            display_gene_summary(data)
     
     elif data_type == "-virus":
-        result = subprocess.run(["datasets", "summary", "virus", "taxon", taxon,"--as-json-lines"],
+        result = subprocess.run(["datasets", "summary", "virus","genome", "taxon", taxon,"--as-json-lines","--limit","20"],
                 capture_output=True, text=True)
         for line in result.stdout.strip().split("\n"):
             if not line:
                 continue
             data = json.loads(line)
-            display_genome_summary(data)   
+            display_virus_summary(data)   
     else:
         print(f"Unknown type: {data_type}")
         sys.exit(1)
