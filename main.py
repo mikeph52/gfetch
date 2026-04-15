@@ -1,4 +1,4 @@
-# gFetch v.0.12.0 by mikeph52 9/4/2026
+# gFetch v.0.13.0 by mikeph52 9/4/2026
 import subprocess
 import requests
 import json
@@ -12,7 +12,7 @@ console = Console()
 # Functions
 def msg():
     print("----------------")
-    print("gFetch v.0.12.0")
+    print("gFetch v.0.13.0")
     print("by mikeph_ 2026\n")
     print("A better version of datasets\n")
     print("Using NCBI datasets (O'Leary NA et. al, 2024)")

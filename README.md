@@ -13,11 +13,27 @@ gFetch is a simple and lightweight Python tool built around the [NCBI Datasets C
 
 ## Depedencies
 ### Python
-gFetch requires python v.3.8+ and the following packages.
+gFetch requires python v.3.8+ and the following packages:
 
-Install packages:
+| Dependency           | Version   |
+|---------------------|-----------|
+| certifi             | 2026.2.25 |
+| charset-normalizer  | 3.4.7     |
+| idna                | 3.11      |
+| iniconfig           | 2.3.0     |
+| markdown-it-py      | 4.0.0     |
+| mdurl               | 0.1.2     |
+| packaging           | 26.0      |
+| pluggy              | 1.6.0     |
+| Pygments            | 2.20.0    |
+| pytest              | 9.0.3     |
+| requests            | 2.33.1    |
+| rich                | 14.3.3    |
+| urllib3             | 2.6.3     |
+
+Install packages from the [requirements.txt](requirements.txt):
 ```bash
-pip install requests rich
+pip install -r requirements.txt
 ```
 ### NCBI Datasets CLI
 Install datasets via conda:
@@ -87,6 +103,9 @@ The underlying NCBI Datasets CLI and data are subject to NCBI's own [usage polic
 
 
 ## Changelog
+### Version 0.13.0 15/4/2026
+- Add requirements.txt.
+
 ### Version 0.12.0 9/4/2026
 - Fix [Issue #2](https://github.com/mikeph52/gfetch/issues/2).
 - Fix summaries for genes and viruses.
